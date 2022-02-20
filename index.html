@@ -15,10 +15,65 @@
 			<li>D for Right</li>
 		</ul>
 	</p>
+	<p>
+		<select id="setting_speed">
+			<option value="" disabled>Select Speed</option>
+			<option value="slow">Slow</option>
+			<option value="medium">Medium</option>
+			<option value="fast">Fast</option>
+		</select>
+	</p>
+	<p>
+		<!-- Theme -->
+		<select id="setting_theme">
+			<option value="" disabled>Select Theme</option>
+			<option value="dark">Dark</option>
+			<option value="light">Light</option>
+		</select>
+	</p>
 	<!-- Good oldschool 640x480 size canvas -->
-	<canvas id="snakecanvas" width="640" height="480"></canvas>
+	<canvas id="snakecanvas"></canvas>
 
 	<script>
+
+		
+		/* 
+			Configuration
+		*/
+		let game_settings = {
+			speed: {
+				slow: 10,
+				medium: 20,
+				fast: 30
+			},
+			theme: {
+				dark: {
+					background: 'black',
+					snake: '#00ff00',
+					food: '#ff0000'
+				},
+				light: {
+					background: 'white',
+					snake: '#000000',
+					food: '#ff0000'
+				}
+			},
+			viewport: {
+				width: 640,
+				height: 480,
+				game_objects_size: 10 // size of each game object or magnification. Smaller number = smaller objects and grid
+			},
+			current_speed: undefined,
+			current_theme: undefined,
+		};
+		game_settings.current_speed = game_settings.speed.slow;
+		game_settings.current_theme = game_settings.theme.dark;
+
+
+		const game_width = game_settings.viewport.width;
+		const game_height = game_settings.viewport.height;
+		let game_objects_size = game_settings.viewport.game_objects_size;
+
 		
 		var canvas = document.getElementById("snakecanvas");
 		var context = snakecanvas.getContext("2d");
@@ -32,23 +87,41 @@
 				Game event loop
 				Handles movement of the snake
 			*/
-			setInterval(game, 1000/15);
+			setInterval(game, 1000/game_settings.current_speed);
 		}
-		
-		
-		
+
 		/* 
-			Configuration
+			Handle game speed when setting_speed is changed
 		*/
+		document.getElementById("setting_speed").addEventListener("change", function() {
+			let speed = document.getElementById("setting_speed").value;
+			game_settings.current_speed = game_settings.speed[speed];
+			canvas.focus();
+			setInterval(game, 1000/game_settings.current_speed);
+		});
+
+		/* 
+			Handle game theme when setting_theme is changed
+		*/
+		document.getElementById("setting_theme").addEventListener("change", function() {
+			canvas.focus();
+			let theme = document.getElementById("setting_theme").value;
+			game_settings.current_theme = game_settings.theme[theme];
+			// Set focus on canvas
+		});
+
+
+
 		// Initial velocity of the snake
 		let xv = yv = 0;
 		// Initial position of the snake at rest
 		let px = py = 10;
-
+		
 		// Game level Grid size and tile count i.e. resolution/grid_size = tile_count
-		let grid_size = 20;
-		let tile_count_x = 32;
-		let tile_count_y = 24;
+		game_objects_size<3? game_objects_size = 3 : game_objects_size = game_objects_size; // If game size is less than 3 then don't let it
+		let grid_size = game_objects_size;
+		let tile_count_x = game_width/grid_size;
+		let tile_count_y = game_height/grid_size;
 
 		let apple_x = apple_y = 15;
 
@@ -57,7 +130,9 @@
 		let trail = [];
 		let tail = 5;
 
-
+		// Canvas viewport size setting
+		canvas.width = game_width;
+		canvas.height = game_height;
 
 		function game(){
 			/* 
@@ -84,11 +159,11 @@
 				Canvas Real time rendering
 			*/
 			// set the background color and fill the background
-			context.fillStyle = "black";
+			context.fillStyle = game_settings.current_theme.background;
 			context.fillRect(0, 0, snakecanvas.width, snakecanvas.height);
 			
 			// Handle the snake
-			context.fillStyle = "lime";
+			context.fillStyle = game_settings.current_theme.snake;
 			for(var i = 0; i < trail.length; i++) {
 				context.fillRect(trail[i].x * grid_size, trail[i].y * grid_size, grid_size-2, grid_size-2);
 				if (trail[i].x == px && trail[i].y == py) {
@@ -108,7 +183,7 @@
 			}
 
 			// Handle the apple
-			context.fillStyle = "red";
+			context.fillStyle = game_settings.current_theme.food;
 			context.fillRect(apple_x * grid_size, apple_y * grid_size, grid_size-2, grid_size-2);
 
 		}
