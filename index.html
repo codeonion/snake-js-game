@@ -90,7 +90,6 @@
 			// Handle the snake
 			context.fillStyle = "lime";
 			for(var i = 0; i < trail.length; i++) {
-				console.log(grid_size)
 				context.fillRect(trail[i].x * grid_size, trail[i].y * grid_size, grid_size-2, grid_size-2);
 				if (trail[i].x == px && trail[i].y == py) {
 					tail = 5;
@@ -117,19 +116,19 @@
 		function keyPush(event){
 			// console.log(event.keyCode) // Enable this to know what key code was pressed
 			switch (event.keyCode) {
-				case 37: // a
+				case 65: // a
 					xv = -1;
 					yv = 0;
 					break;
-				case 38: // w
+				case 87: // w
 					xv = 0;
 					yv = -1;
 					break;
-				case 39: // d
+				case 68: // d
 					xv = 1;
 					yv = 0;
 					break;
-				case 40: // s
+				case 83: // s
 					xv = 0;
 					yv = 1;
 					break;
