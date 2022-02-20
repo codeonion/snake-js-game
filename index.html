@@ -20,30 +20,10 @@
 
 	<script>
 		
-		// Config
-
-		// Initial velocity of the snake
-		let xv = yv = 0;
-
-		// Game level Grid size
-		let grid_size = 20;
-		let tile_count = 20;
-
-		let apple_x = apple_y = 15;
-
-		// Initial position of the snake at rest
-		let px = py = 0;
-
-		// Personality of the snake
-		let trail = [];
-		let tail = 5;
-
+		var canvas = document.getElementById("snakecanvas");
+		var context = snakecanvas.getContext("2d");
+		
 		window.onload = function() {
-			// get the canvas
-			var canvas = document.getElementById("snakecanvas");
-			// get the context
-			var context = snakecanvas.getContext("2d");
-
 
 			// keypush event listener for managing the snake job. Its not easy for the snake
 			document.addEventListener("keydown", keyPush); // Passes keyboard button pressed event object in the keyPush function
@@ -52,11 +32,34 @@
 				Game event loop
 				Handles movement of the snake
 			*/
-			setInterval(game(context), 1000/10);
+			setInterval(game, 1000/15);
 		}
+		
+		
+		
+		/* 
+			Configuration
+		*/
+		// Initial velocity of the snake
+		let xv = yv = 0;
+		// Initial position of the snake at rest
+		let px = py = 10;
+
+		// Game level Grid size and tile count i.e. resolution/grid_size = tile_count
+		let grid_size = 20;
+		let tile_count_x = 32;
+		let tile_count_y = 24;
+
+		let apple_x = apple_y = 15;
 
 
-		function game(context){
+		// Personality of the snake
+		let trail = [];
+		let tail = 5;
+
+
+
+		function game(){
 			/* 
 				Keep the snake miving based on the direction button pressed i.e. w, a, s, d
 			*/
@@ -65,15 +68,15 @@
 
 			// Check if the snake has hit the wall
 			if(px < 0) {
-				px = tile_count - 1;
+				px = tile_count_x - 1;
 			}
-			if(px > tile_count - 1) {
+			if(px > tile_count_x - 1) {
 				px = 0;
 			}
 			if(py < 0) {
-				py = tile_count - 1;
+				py = tile_count_y - 1;
 			}
-			if(py > tile_count - 1) {
+			if(py > tile_count_y - 1) {
 				py = 0;
 			}
 
@@ -87,6 +90,7 @@
 			// Handle the snake
 			context.fillStyle = "lime";
 			for(var i = 0; i < trail.length; i++) {
+				console.log(grid_size)
 				context.fillRect(trail[i].x * grid_size, trail[i].y * grid_size, grid_size-2, grid_size-2);
 				if (trail[i].x == px && trail[i].y == py) {
 					tail = 5;
@@ -100,8 +104,8 @@
 			// Handle the snake hitting the apple
 			if(apple_x == px && apple_y == py) {
 				tail++;
-				apple_x = Math.floor(Math.random() * tile_count);
-				apple_y = Math.floor(Math.random() * tile_count);
+				apple_x = Math.floor(Math.random() * tile_count_x);
+				apple_y = Math.floor(Math.random() * tile_count_y);
 			}
 
 			// Handle the apple
@@ -113,25 +117,25 @@
 		function keyPush(event){
 			// console.log(event.keyCode) // Enable this to know what key code was pressed
 			switch (event.keyCode) {
-				case 65: // a
+				case 37: // a
 					xv = -1;
 					yv = 0;
 					break;
-					case 87: // w
+				case 38: // w
 					xv = 0;
 					yv = -1;
 					break;
-				case 68: // d
+				case 39: // d
 					xv = 1;
 					yv = 0;
 					break;
-				case 83: // s
+				case 40: // s
 					xv = 0;
 					yv = 1;
 					break;
-				default:
-					console.warn("Keycode not recognized and game does not support this action.");
-					break;
+				// default:
+				// 	console.warn("Keycode not recognized and game does not support this action.");
+				// 	break;
 			}
 		}
 		
