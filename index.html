@@ -3,9 +3,65 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Snake</title>
+	<title>Snake Bro</title>
 </head>
 <body>
-Alpha
+	<p>
+		<h6>Controls</h6>
+		<ul>
+			<li>W for Up</li>
+			<li>S for Down</li>
+			<li>A for Left</li>
+			<li>D for Right</li>
+		</ul>
+	</p>
+	<!-- Good oldschool 640x480 size canvas -->
+	<canvas id="snakecanvas" width="640" height="480"></canvas>
+
+	<script>
+		
+		// Config
+		// Initial velocity of the snake
+		let xv, yv = 0;
+
+		window.onload = function() {
+			// get the canvas
+			var canvas = document.getElementById("snakecanvas");
+			// get the context
+			var context = snakecanvas.getContext("2d");
+			// set the background color
+			context.fillStyle = "#000000";
+			// fill the background
+			context.fillRect(0, 0, snakecanvas.width, snakecanvas.height);
+
+			// keypush event listener for managing the snake job. Its not easy for the snake
+			window.addEventListener("keydown", keyPush); // Passes keyboard button pressed event object in the keyPush function
+
+			// Game event loop
+			setInterval(game, 1000/10); // thats the speed of the game
+		}
+
+
+		function game(){
+
+		}
+		// Snake movement management function. 
+		function keyPush(event){
+			// console.log(event.keyCode) // Enable this to know what key code was pressed
+			switch (event.keyCode) {
+				case 87: // w
+					break;
+				case 83: // s
+					break;
+				case 65: // a
+					break;
+				case 68: // d
+					break;
+				default:
+					break;
+			}
+		}
+		
+	</script>
 </body>
 </html>
